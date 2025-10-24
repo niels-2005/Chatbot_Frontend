@@ -127,7 +127,7 @@ function PureMultimodalInput({
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadQueue, setUploadQueue] = useState<string[]>([]);
+  const [uploadQueue, setUploadQueue] = useState<string[]>([]); // Auskommentiert: File-Upload
 
   const submitForm = useCallback(() => {
     window.history.replaceState({}, "", `/chat/${chatId}`);
@@ -136,6 +136,7 @@ function PureMultimodalInput({
       role: "user",
       parts: [
         ...attachments.map((attachment) => ({
+          // Auskommentiert: File-Upload
           type: "file" as const,
           url: attachment.url,
           name: attachment.name,
@@ -148,7 +149,7 @@ function PureMultimodalInput({
       ],
     });
 
-    setAttachments([]);
+    setAttachments([]); // Auskommentiert: File-Upload
     setLocalStorageInput("");
     resetHeight();
     setInput("");
@@ -169,6 +170,7 @@ function PureMultimodalInput({
   ]);
 
   const uploadFile = useCallback(async (file: File) => {
+    // Auskommentiert: File-Upload
     const formData = new FormData();
     formData.append("file", file);
 
@@ -207,6 +209,7 @@ function PureMultimodalInput({
   );
 
   const handleFileChange = useCallback(
+    // Auskommentiert: File-Upload
     async (event: ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
 
@@ -235,8 +238,8 @@ function PureMultimodalInput({
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
       {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
+        attachments.length === 0 && // Auskommentiert: File-Upload
+        uploadQueue.length === 0 && ( // Auskommentiert: File-Upload
           <SuggestedActions
             chatId={chatId}
             selectedVisibilityType={selectedVisibilityType}
@@ -244,14 +247,16 @@ function PureMultimodalInput({
           />
         )}
 
-      <input
-        className="-top-4 -left-4 pointer-events-none fixed size-0.5 opacity-0"
-        multiple
-        onChange={handleFileChange}
-        ref={fileInputRef}
-        tabIndex={-1}
-        type="file"
-      />
+      {
+        <input // Auskommentiert: File-Upload
+          className="-top-4 -left-4 pointer-events-none fixed size-0.5 opacity-0"
+          multiple
+          onChange={handleFileChange}
+          ref={fileInputRef}
+          tabIndex={-1}
+          type="file"
+        />
+      }
 
       <PromptInput
         className="rounded-xl border border-border bg-background p-3 shadow-xs transition-all duration-200 focus-within:border-border hover:border-muted-foreground/50"
@@ -264,7 +269,7 @@ function PureMultimodalInput({
           }
         }}
       >
-        {(attachments.length > 0 || uploadQueue.length > 0) && (
+        {(attachments.length > 0 || uploadQueue.length > 0) && ( // Auskommentiert: File-Upload
           <div
             className="flex flex-row items-end gap-2 overflow-x-scroll"
             data-testid="attachments-preview"
@@ -296,7 +301,7 @@ function PureMultimodalInput({
               />
             ))}
           </div>
-        )}
+        )}{" "}
         <div className="flex flex-row items-start gap-1 sm:gap-2">
           <PromptInputTextarea
             autoFocus
@@ -306,7 +311,7 @@ function PureMultimodalInput({
             maxHeight={200}
             minHeight={44}
             onChange={handleInput}
-            placeholder="Send a message..."
+            placeholder="Sende eine Nachricht..."
             ref={textareaRef}
             rows={1}
             value={input}
@@ -315,15 +320,19 @@ function PureMultimodalInput({
         </div>
         <PromptInputToolbar className="!border-top-0 border-t-0! p-0 shadow-none dark:border-0 dark:border-transparent!">
           <PromptInputTools className="gap-0 sm:gap-0.5">
-            <AttachmentsButton
-              fileInputRef={fileInputRef}
-              selectedModelId={selectedModelId}
-              status={status}
-            />
-            <ModelSelectorCompact
-              onModelChange={onModelChange}
-              selectedModelId={selectedModelId}
-            />
+            {
+              <AttachmentsButton // Auskommentiert: File-Upload
+                fileInputRef={fileInputRef}
+                selectedModelId={selectedModelId}
+                status={status}
+              />
+            }
+            {
+              <ModelSelectorCompact // Auskommentiert: Modell-Auswahl
+                onModelChange={onModelChange}
+                selectedModelId={selectedModelId}
+              />
+            }
           </PromptInputTools>
 
           {status === "submitted" ? (
@@ -331,7 +340,7 @@ function PureMultimodalInput({
           ) : (
             <PromptInputSubmit
               className="size-8 rounded-full bg-primary text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
-              disabled={!input.trim() || uploadQueue.length > 0}
+              disabled={!input.trim() || uploadQueue.length > 0} // Auskommentiert: File-Upload
               status={status}
             >
               <ArrowUpIcon size={14} />
@@ -353,6 +362,7 @@ export const MultimodalInput = memo(
       return false;
     }
     if (!equal(prevProps.attachments, nextProps.attachments)) {
+      // Auskommentiert: File-Upload
       return false;
     }
     if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType) {
@@ -367,6 +377,7 @@ export const MultimodalInput = memo(
 );
 
 function PureAttachmentsButton({
+  // Auskommentiert: File-Upload
   fileInputRef,
   status,
   selectedModelId,
@@ -393,9 +404,10 @@ function PureAttachmentsButton({
   );
 }
 
-const AttachmentsButton = memo(PureAttachmentsButton);
+const AttachmentsButton = memo(PureAttachmentsButton); // Auskommentiert: File-Upload
 
 function PureModelSelectorCompact({
+  // Auskommentiert: Modell-Auswahl
   selectedModelId,
   onModelChange,
 }: {
@@ -452,7 +464,7 @@ function PureModelSelectorCompact({
   );
 }
 
-const ModelSelectorCompact = memo(PureModelSelectorCompact);
+const ModelSelectorCompact = memo(PureModelSelectorCompact); // Auskommentiert: Modell-Auswahl
 
 function PureStopButton({
   stop,
