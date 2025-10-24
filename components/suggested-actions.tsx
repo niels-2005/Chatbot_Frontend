@@ -4,6 +4,7 @@ import type { UseChatHelpers } from "@ai-sdk/react";
 import { motion } from "framer-motion";
 import { memo, useEffect, useState } from "react";
 import type { ChatMessage } from "@/lib/types";
+import { generateUUID } from "@/lib/utils";
 import { Suggestion } from "./elements/suggestion";
 import type { VisibilityType } from "./visibility-selector";
 
@@ -72,7 +73,7 @@ function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
   // Nur im Client ausführen → verhindert Hydration-Fehler
   useEffect(() => {
     const shuffled = [...allSuggestions].sort(() => 0.5 - Math.random());
-    setSuggestedActions(shuffled.slice(0, 4));
+    setSuggestedActions(shuffled.slice(0, 2));
   }, [chatId]); // bei neuem Chat neu würfeln
 
   return (
@@ -93,6 +94,7 @@ function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
             onClick={(suggestion) => {
               window.history.replaceState({}, "", `/chat/${chatId}`);
               sendMessage({
+                id: generateUUID(),
                 role: "user",
                 parts: [{ type: "text", text: suggestion }],
               });

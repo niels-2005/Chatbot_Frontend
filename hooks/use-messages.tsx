@@ -6,7 +6,7 @@ import { useScrollToBottom } from "./use-scroll-to-bottom";
 export function useMessages({
   status,
 }: {
-  status: UseChatHelpers<ChatMessage>["status"];
+  status: "ready" | "submitted" | "streaming" | "error";
 }) {
   const {
     containerRef,

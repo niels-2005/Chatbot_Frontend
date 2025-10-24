@@ -72,7 +72,7 @@ function PureArtifact({
   chatId: string;
   input: string;
   setInput: Dispatch<SetStateAction<string>>;
-  status: UseChatHelpers<ChatMessage>["status"];
+  status: "ready" | "submitted" | "streaming" | "error";
   stop: UseChatHelpers<ChatMessage>["stop"];
   attachments: Attachment[];
   setAttachments: Dispatch<SetStateAction<Attachment[]>>;

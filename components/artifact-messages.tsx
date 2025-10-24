@@ -10,7 +10,7 @@ import { PreviewMessage, ThinkingMessage } from "./message";
 
 type ArtifactMessagesProps = {
   chatId: string;
-  status: UseChatHelpers<ChatMessage>["status"];
+  status: "ready" | "submitted" | "streaming" | "error";
   votes: Vote[] | undefined;
   messages: ChatMessage[];
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];

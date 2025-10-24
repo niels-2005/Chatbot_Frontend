@@ -39,18 +39,18 @@ function PureChatHeader({
   const { width: windowWidth } = useWindowSize();
 
   // Neu: State für Checkboxen (leicht erweiterbar)
-  const [knowledgeLevel, setKnowledgeLevel] = useState<string[]>([]);
-  const [writingStyle, setWritingStyle] = useState<string[]>([]);
+  const [knowledgeLevel, setKnowledgeLevel] = useState<string | null>(null);
 
   const knowledgeOptions = [
-    { id: "none", label: "Keine Erfahrung" },
-    { id: "medium", label: "Mittlere Erfahrung" },
-    { id: "hard", label: "Mach es mir schwer" },
+    { id: "none", label: "Keine Erfahrung – Einfache Sprache, viele Beispiele" },
+    { id: "base", label: "Grundkenntnisse – Kürzere Erklärungen, gelegentliche Hinweise" },
+    { id: "advanced", label: "Fortgeschritten – Fachsprache, Fokus auf Verständnis und Anwendung" },
   ];
 
   const styleOptions = [
     { id: "scientific", label: "Wissenschaftlich" },
-    { id: "polite", label: "Höflich" },
+    { id: "casual", label: "Locker" },
+    { id: "motivating", label: "Motivierend" },
   ];
 
   return (
@@ -62,109 +62,43 @@ function PureChatHeader({
         <DropdownMenuTrigger asChild>
           <Button
             aria-label="Personalisierung"
-            className="ml-auto h-8 w-8 p-0"
+            className="ml-auto h-8 w-8 p-0 cursor-pointer"
             size="sm"
             variant="ghost"
           >
             <CpuIcon size={16} /> {/* Geändert: CpuIcon statt SettingsIcon */}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-64">
-          <DropdownMenuLabel>Wissenstand Modul</DropdownMenuLabel>
+        <DropdownMenuContent align="end" className="w-140">
+          <DropdownMenuLabel>Wissenstand vom Modul</DropdownMenuLabel>
           {knowledgeOptions.map((option) => (
             <DropdownMenuItem
               className="flex items-center space-x-2"
               key={option.id}
+              onSelect={(event) => event.preventDefault()}
             >
               <Checkbox
-                checked={knowledgeLevel.includes(option.id)}
+                checked={knowledgeLevel === option.id}  // Geändert: Einzelne Auswahl prüfen
                 id={option.id}
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    setKnowledgeLevel([...knowledgeLevel, option.id]);
+                    setKnowledgeLevel(option.id);  // Geändert: Setze auf diese ID
                   } else {
-                    setKnowledgeLevel(
-                      knowledgeLevel.filter((id) => id !== option.id)
-                    );
+                    setKnowledgeLevel(null);  // Geändert: Setze auf null
                   }
                 }}
               />
               <label
-                className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 htmlFor={option.id}
               >
                 {option.label}
               </label>
             </DropdownMenuItem>
           ))}
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>KI Schreibstil</DropdownMenuLabel>
-          {styleOptions.map((option) => (
-            <DropdownMenuItem
-              className="flex items-center space-x-2"
-              key={option.id}
-            >
-              <Checkbox
-                checked={writingStyle.includes(option.id)}
-                id={option.id}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    setWritingStyle([...writingStyle, option.id]);
-                  } else {
-                    setWritingStyle(
-                      writingStyle.filter((id) => id !== option.id)
-                    );
-                  }
-                }}
-              />
-              <label
-                className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                htmlFor={option.id}
-              >
-                {option.label}
-              </label>
-            </DropdownMenuItem>
-          ))}
+          
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {/* Entfernt: New Chat Button */}
-      {/* {(!open || windowWidth < 768) && (
-        <Button
-          className="order-2 ml-auto h-8 px-2 md:order-1 md:ml-0 md:h-fit md:px-2"
-          onClick={() => {
-            router.push("/");
-            router.refresh();
-          }}
-          variant="outline"
-        >
-          <PlusIcon />
-          <span className="md:sr-only">New Chat</span>
-        </Button>
-      )} */}
-
-      {/* Entfernt: VisibilitySelector */}
-      {/* {!isReadonly && (
-        <VisibilitySelector
-          chatId={chatId}
-          className="order-1 md:order-2"
-          selectedVisibilityType={selectedVisibilityType}
-        />
-      )} */}
-
-      {/* Entfernt: Deploy with Vercel Button */}
-      {/* <Button
-        asChild
-        className="order-3 hidden bg-zinc-900 px-2 text-zinc-50 hover:bg-zinc-800 md:ml-auto md:flex md:h-fit dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-      >
-        <Link
-          href={"https://vercel.com/templates/next.js/nextjs-ai-chatbot"}
-          rel="noreferrer"
-          target="_noblank"
-        >
-          Deploy with Vercel
-        </Link>
-        </Button> */}
     </header>
   );
 }

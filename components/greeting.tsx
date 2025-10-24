@@ -37,12 +37,10 @@ export const Greeting = () => {
         Schritt für Schritt zu verstehen und selbst zu erarbeiten.
         <br />
         <br />
-        In den Einstellungen kannst du mein Verhalten individuell anpassen – zum
-        Beispiel festlegen, wie dein aktueller Wissensstand im Modul ist und in
-        welchem Stil ich dich beim Lernen unterstützen soll.
+        In den Einstellungen kannst du festlegen, wie dein aktueller Wissensstand im Modul ist.
         <br />
         <br />
-        Trotzdem kann es vorkommen, dass ich gelegentlich Fehler mache.
+        Es kann vorkommen, dass ich gelegentlich Fehler mache.
         Hinterfrage meine Antworten daher immer kritisch und überprüfe sie, wenn
         du unsicher bist.
       </motion.div>

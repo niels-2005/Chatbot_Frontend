@@ -13,7 +13,7 @@ import { PreviewMessage, ThinkingMessage } from "./message";
 
 type MessagesProps = {
   chatId: string;
-  status: UseChatHelpers<ChatMessage>["status"];
+  status: "ready" | "submitted" | "streaming" | "error";
   votes: Vote[] | undefined;
   messages: ChatMessage[];
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
@@ -76,6 +76,11 @@ function PureMessages({
                 status === "streaming" && messages.length - 1 === index
               }
               isReadonly={isReadonly}
+              isThinking={
+                status === "submitted" && 
+                message.role === "assistant" && 
+                messages.length - 1 === index
+              }
               key={message.id}
               message={message}
               regenerate={regenerate}
@@ -90,10 +95,6 @@ function PureMessages({
               }
             />
           ))}
-
-          <AnimatePresence mode="wait">
-            {status === "submitted" && <ThinkingMessage key="thinking" />}
-          </AnimatePresence>
 
           <div
             className="min-h-[24px] min-w-[24px] shrink-0"

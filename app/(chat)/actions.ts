@@ -1,14 +1,17 @@
 "use server";
 
-import { generateText, type UIMessage } from "ai";
+import ollama from "ollama"; // Neu: Ollama importieren
 import { cookies } from "next/headers";
+import type { UIMessage } from "ai"; // Behalte type UIMessage, entferne generateText
+// Entferne: import { generateText, type UIMessage } from "ai";
+// Entferne: import { myProvider } from "@/lib/ai/providers";
 import type { VisibilityType } from "@/components/visibility-selector";
-import { myProvider } from "@/lib/ai/providers";
 import {
   deleteMessagesByChatIdAfterTimestamp,
   getMessageById,
   updateChatVisiblityById,
 } from "@/lib/db/queries";
+import { generateUUID } from "@/lib/utils"; // Neu: Für UUID
 
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
@@ -20,17 +23,8 @@ export async function generateTitleFromUserMessage({
 }: {
   message: UIMessage;
 }) {
-  const { text: title } = await generateText({
-    model: myProvider.languageModel("title-model"),
-    system: `\n
-    - you will generate a short title based on the first message a user begins a conversation with
-    - ensure it is not more than 80 characters long
-    - the title should be a summary of the user's message
-    - do not use quotes or colons`,
-    prompt: JSON.stringify(message),
-  });
-
-  return title;
+  // Für Tests: Fester Titel mit UUID
+  return "Big Data und Data Science";
 }
 
 export async function deleteTrailingMessages({ id }: { id: string }) {

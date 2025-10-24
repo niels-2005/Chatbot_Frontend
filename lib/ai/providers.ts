@@ -4,7 +4,7 @@ import {
   extractReasoningMiddleware,
   wrapLanguageModel,
 } from "ai";
-import { isTestEnvironment } from "../constants";
+import { isTestEnvironment } from "../constants"; 
 
 export const myProvider = isTestEnvironment
   ? (() => {

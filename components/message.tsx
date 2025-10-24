@@ -30,6 +30,7 @@ const PurePreviewMessage = ({
   message,
   vote,
   isLoading,
+  isThinking = false,
   setMessages,
   regenerate,
   isReadonly,
@@ -39,6 +40,7 @@ const PurePreviewMessage = ({
   message: ChatMessage;
   vote: Vote | undefined;
   isLoading: boolean;
+  isThinking?: boolean;
   setMessages: UseChatHelpers<ChatMessage>["setMessages"];
   regenerate: UseChatHelpers<ChatMessage>["regenerate"];
   isReadonly: boolean;
@@ -103,6 +105,22 @@ const PurePreviewMessage = ({
                   key={attachment.url}
                 />
               ))}
+            </div>
+          )}
+
+          {/* Zeige "Thinking..." wenn isThinking aktiv ist und die Nachricht noch leer */}
+          {isThinking && message.role === "assistant" && !message.parts?.some(p => p.type === 'text' && p.text) && (
+            <div className="flex w-full flex-col gap-2 md:gap-4">
+              <div className="p-0 text-sm">
+                <span 
+                  className="inline-block bg-gradient-to-r from-muted-foreground via-foreground to-muted-foreground bg-clip-text text-transparent animate-shimmer"
+                  style={{
+                    backgroundSize: '200% 100%',
+                  }}
+                >
+                  Thinking...
+                </span>
+              </div>
             </div>
           )}
 
@@ -270,7 +288,7 @@ const PurePreviewMessage = ({
             return null;
           })}
 
-          {!isReadonly && (
+          {!isReadonly && !isThinking && (
             <MessageActions
               chatId={chatId}
               isLoading={isLoading}
@@ -290,6 +308,9 @@ export const PreviewMessage = memo(
   PurePreviewMessage,
   (prevProps, nextProps) => {
     if (prevProps.isLoading !== nextProps.isLoading) {
+      return false;
+    }
+    if (prevProps.isThinking !== nextProps.isThinking) {
       return false;
     }
     if (prevProps.message.id !== nextProps.message.id) {
